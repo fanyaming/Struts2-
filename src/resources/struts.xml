@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+        <constant name="struts.devMode" value="true" />
+        <!--<package name="helloPkg" extends="struts-default" namespace="/pss">
+                <action name="hello" class="com.fym.action.HelloAction" method="excute">
+                        <result name="hello">/index.jsp</result>
+                </action>
+        </package>-->
+        <package name="interceptorPkg" extends="struts-default" >
+                <!-- 注册拦截器(注意顺序) -->
+                <interceptors>
+                        <interceptor name="checkLogin" class="com.fym.interceptor.CheckLoginInterceptor">
+                                <!-- 为当前拦截器配置参数,解决硬编码问题 -->
+                                <param name="loginName">login</param>
+                        </interceptor>
+                        <!-- 打包(将我们需要的打成一个包) -->
+                        <interceptor-stack name="mystack">
+                                <interceptor-ref name="checkLogin"/>
+                                <interceptor-ref name="defaultStack"/>
+                        </interceptor-stack>
+                </interceptors>
+                <default-interceptor-ref name="mystack"/>
+                <!-- 设置一个 全局的逻辑视图名称-->
+                <global-results>
+                        <result name="login" type="redirect">/login.jsp</result>
+                </global-results>
+                <action name="login" class="com.fym.action.LoginAction">
+                        <!-- 引用自己需要的拦截器 -->
+                        <interceptor-ref name="defaultStack"/>
+                        <!-- 使用URL重定向到main Action -->
+                        <result name="success" type="redirectAction">main</result>
+                </action>
+                <action name="main">
+                        <!-- 引用拦截器(谁需要拦截,就在哪里设置) -->
+                        <result>/welcome.jsp</result>
+                </action>
+        </package>
+</struts>
